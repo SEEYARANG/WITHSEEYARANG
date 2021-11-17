@@ -1,0 +1,107 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <!-- Webpage Title -->
+    <title>정보추가페이지</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Do+Hyeon&display=swap" rel="stylesheet">
+    
+    <style type="text/css">
+        *{
+            font-family: "Do Hyeon", sans-serif;
+        }
+        
+    </style>
+    <link rel="stylesheet" type = "text/css" href="{% static 'css/info.css'%}">
+    <script src = "{%static 'js/csrftoken.js' %}" type = "text/javascript"></script>   
+    {% csrf_token %}
+    <script type="text/javascript">
+        function infoplus() {
+            var product_info = $("#product_info").val()
+            var para = document.location.href.split("/").slice(-2)[0]; 
+            $.ajax({
+                type:"POST",
+                url: `/seeyarang/info/detail/`,
+                data: {
+                    'id': para,
+                    'information': product_info,
+                },
+                success: function(response){
+                    window.location.reload();
+                },
+                error: function(response){
+                    alert('다시 한번 입력해주세요')
+                    window.location.reload();
+                },
+            })
+        }
+    
+    </script>
+    <script>
+        function enterkey() {
+            if (window.event.keyCode == 13) { 
+                infoplus();
+            }
+        }
+    </script>
+</head>
+
+<body>
+    <div class="wrap">
+        <div class="logout">
+            <h3 ><a href="/seeyarang/info"><p class="small logoutcolor">뒤로가기</p></a></h3>
+        </div>
+        <div class="logout">
+            <h3 ><a href="/seeyarang"><p class="small logoutcolor">HOME</p></a></h3>
+        </div>
+        <div class="jumbotron">
+            <h1 class="display-4">{{post.name}}</h1>
+            <div class="info_img_box">
+                <p class="lead">- 이 상품에 대한 당신의 후기를 들려주세요!</p>
+                <img src="{% get_static_prefix %}{{post.image_path}}" class="card-img-top"  alt="">
+            </div>  
+            
+        </div>
+        <div>
+            <input class="id" id = "product_info" onkeydown="enterkey()" type="text" placeholder="나의 리뷰는?">
+            <br>
+            <button id = 'infobtn' type="submit" class="mybtn" style="text-align: center" onclick="infoplus()">추가!</button>
+            <br>
+        </div>
+        <div>
+            <ul class="box">
+                {% if info %}
+                    {% for i in info %}
+                    <li class="info_font">
+                    {{ i.information }} 
+                    <div class="date_font">
+                            {{ i.create_date }}
+                    </div>
+                    <hr class="my-1">
+                    <br>
+                    </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+    
+</body>

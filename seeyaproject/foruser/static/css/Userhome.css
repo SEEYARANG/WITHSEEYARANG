@@ -1,0 +1,38 @@
+body {
+    background-color: rgb(27, 51, 42);
+}
+
+.block1{
+    background: white;
+    border-radius: 20px;
+    margin-top: 180px;
+    text-align: center;
+    width: 350px;
+    height: 350px;
+    padding-top: 8%;
+}
+.logout{
+    float: right;
+    padding:20px 50px 0 0;
+}
+.objfont{
+    color: black;
+    font-size: 25px;
+}
+.imageblock{
+    margin-top: 65px;
+}
+.bottom{
+    padding-top: 20px;
+}
+.username{
+    float: left;
+    padding:20px 0 0 20px;
+    color: white;
+}
+.logoutcolor{
+    background-color: rgb(6, 46, 31);
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+}

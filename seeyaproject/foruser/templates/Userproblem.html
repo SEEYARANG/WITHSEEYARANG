@@ -1,0 +1,191 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <!-- Webpage Title -->
+    <title>문제점</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->.+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Do+Hyeon&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" type = "text/css" href="{% static 'css/Userproblem.css'%}">
+    <script src = "{%static 'js/csrftoken.js' %}" type = "text/javascript"></script>   
+    <style type="text/css">
+        *{
+            font-family: "Do Hyeon", sans-serif;
+        }
+        .wrap {
+            width: 900px;
+            margin: auto;
+            margin-top: 10px;
+        }
+        .objsize{
+            font-size: 20px;
+            color: black;
+        }
+        .feedbacksize{
+            font-size: medium;
+            color: black;
+        }
+        .mybtn{
+            padding: 8px;
+            border-radius: 5px;
+            background-color: rgb(12, 44, 28);
+            color: white;
+            align-items: center;
+            border: none;
+            margin-bottom: 20px;
+            width: 100%;
+        }
+        .id{
+            background: none;
+            outline: none;
+            border-radius: 5px;
+            border: 2px solid #8b8b8b;
+            padding: 5px;
+            width: 100%;
+
+        }
+        .problem{
+            font-size: medium;
+            color: black;
+            background: none;
+            outline: none;
+            border-radius: 5px;
+            border: 2px solid #8b8b8b;
+            padding: 5px;
+            margin-top: 20px;
+            width: 100%;
+            height: 100px;
+        }
+        .border{
+            border-radius: 5px;
+            border: 2px solid #8b8b8b;
+            padding: 10px;
+            width: 100%;
+        }
+    </style>
+</head>
+<script>
+    $(document).ready(function () {
+        show();
+    });
+  
+    function show() {
+        $.ajax({
+            type: 'GET',
+            url: '{%url "problem_ajax"%}',
+            data: {},
+            success: function(response){
+                let problemlist = response['problem']
+                let feedbacklist = response['feedback']
+                if(problemlist){
+                    for(let i=0; i<problemlist.length; i++){
+                        let num = problemlist[i]['id']
+console.log(problemlist[i])
+                        let time = problemlist[i]['create_date'].split('T')
+                        let date = time[0].split('-')
+                        let timedata = time[1].split('.')[0].split(':')
+                        let prob = problemlist[i]['problem_title']
+                        if (feedbacklist[0] != null){
+                            let temp_html2 = `<a href="/home/problem/${num}/">
+                                                <tr class = "problem">
+                                                    <td><p class = "objsize">${prob}     [${date[0]}년 ${date[1]}월 ${date[2]}일 ${timedata[0]}시 ${timedata[1]}분]</p>
+                                                    </td>
+                                                    <td>
+                                                        <p class = "feedbacksize">   ↳ 피드백 도착!</p>
+                                                    </td>
+                                                </tr>
+                                        </a>`
+                            $('#obj-box').append(temp_html2)
+                        }
+                        else {
+                            let temp_html1 = `<tr class = "problem">
+                                            <td><p class = "objsize">${prob}</p></td>
+                                            <td>
+                                                <p class = "objsize">${date[0]}년 ${date[1]}월 ${date[2]}일 ${timedata[0]}시 ${timedata[1]}분</p>
+                                            </td>
+                                            <td></td>
+                                        </tr>`
+                        $('#obj-box').append(temp_html1)
+                        }
+                    }
+                }
+            }
+        })
+    }
+    
+    function plus() {
+            var problem = $("#problem").val()
+            var problem_title = $("#problem_title").val()
+            $.ajax({
+                type:"POST",
+                url: `/home/problem/plus/`,
+                data: {
+                    'Userproblem': problem,
+                    'Userproblem_title': problem_title
+                },
+                success: function(response){
+                    window.location.reload();
+                },
+                error: function(response){
+                    alert('다시 한번 입력해주세요')
+                    window.location.reload();
+                },
+            })
+        }
+       
+
+
+</script>
+<body>
+    <div class="wrap">
+        <div>
+            <div class="logout">
+                <h3 ><a href="{%url 'logout'%}"><p class="small logoutcolor">로그아웃</p></a></h3>
+            </div>
+            <div class="logout">
+                <h3 ><a href="{%url 'home'%}"><p class="small logoutcolor">HOME</p></a></h3>
+            </div>
+        </div>
+        <div class="jumbotron">
+            <h1 class="display-4">시야랑의 문제를 알려주세요</h1>
+            <br>
+            <hr class="my-4">
+        </div>
+        <div>
+            <ul class="border">
+                   <input class="id" id = "problem_title" type="text" placeholder="제목">
+                   <textarea class="problem" id = "problem" type="text" placeholder="문제점을 적어주세요"></textarea>
+                   <button id = 'problembtn' type="submit" class="mybtn" style="text-align: center" onclick="plus()">제출!</button>
+
+                <br>
+            </ul>
+        </div>
+        <hr class="my-1">
+        <table class="table">
+            <thead>
+            <tr>
+            </tr>
+            </thead>
+            <tbody id="obj-box">
+            </tbody>
+        </table>
+    </div>
+</body>

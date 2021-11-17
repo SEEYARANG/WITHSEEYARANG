@@ -1,0 +1,35 @@
+*{
+    font-family: "Do Hyeon", sans-serif;
+}
+.wrap {
+    width: 900px;
+    margin: auto;
+    margin-top: 10px;
+}
+.logout{
+    float: right;
+    padding:20px 20px 0 0;
+}
+.logoutcolor{
+    background-color: rgb(65, 71, 69);
+    color: white;
+    padding: 8px;
+    border-radius: 5px;
+}
+body {
+    background-color: white;
+}
+.fontsize{
+    font-size: 23px;
+    font-weight: lighter;
+}
+.objsize{
+    font-size: 20px;
+}
+.img_box{
+    padding: 8px;
+    object-fit: contain;
+    width: 120px;
+    height: auto;
+    margin-right: 15%;
+}

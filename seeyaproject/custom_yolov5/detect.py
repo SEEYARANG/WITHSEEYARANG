@@ -167,7 +167,7 @@ def run(weights='best.pt',  # model.pt path(s)
         # Second-stage classifier (optional)
         if classify:
             pred = apply_classifier(pred, modelc, img, im0s)
-
+        
         # Process predictions
         for i, det in enumerate(pred):  # detections per image
             if webcam:  # batch_size >= 1
@@ -196,9 +196,11 @@ def run(weights='best.pt',  # model.pt path(s)
 
             data = arduino.readline() 
             if (data == b'3\r\n') or (result_csr == '{"text":"이거 읽어줘"}'): # 키오스크 ocr 출력
+                print(data)
                 user_read, for_voice = clova_ocr.OcrResult(time_stamp2)
+
                 if user_read == []:
-                    clova_voice.Clova_info("키오스크가 감지되지 않았습니다")
+                    clova_voice.Clova_info("글자가 감지되지 않았습니다.")
                     ocr_name = []
                     result_csr = ''
                 else:
@@ -210,16 +212,17 @@ def run(weights='best.pt',  # model.pt path(s)
                     post = models.PredictedResult.objects.all()
                     img_path = 'repository/predicted/' + time_stamp2 + '.jpg'
                     post.create(user= now_user, type = 'OCR', prediction = ocr_name, img_path = img_path)
-                    result_csr = ''
+                    result_csr = ''; save_ob_name = ''
         
-
+            data = arduino.readline()
             if (data == b'5\r\n') or (result_csr == '{"text":"정보 알려줘"}'): # info 출력
+                print(data)
                 if len(ocr_name) != 0: # ocr에 대한 info 출력
                     for i in ocr_name:
                         info = class_info.filter(name = i)[0]["information"]
                         clova_voice.Clova_info(info)
                         print(info)
-                    ocr_name = []; result_csr = ''
+                    ocr_name = []; result_csr = ''; save_ob_name = '';
             
 #/////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -243,6 +246,8 @@ def run(weights='best.pt',  # model.pt path(s)
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
+
+
                     if save_txt:  # Write to file
                         xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
                         line = (cls, *xywh, conf) if save_conf else (cls, *xywh)  # label format
@@ -252,7 +257,7 @@ def run(weights='best.pt',  # model.pt path(s)
                     if save_img or save_crop or view_img:  # Add bbox to image
                         c = int(cls)  # integer class
                         label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
-                       #plot_one_box(xyxy, im0, label=label, color=colors(c, True))#, line_thickness=line_thickness)
+                        #plot_one_box(xyxy, im0, label=label, color=colors(c, True))#, line_thickness=line_thickness)
 
 #################################### add code ###########################################################################
                         
@@ -263,7 +268,7 @@ def run(weights='best.pt',  # model.pt path(s)
                         y1 = int(xyxy[1].item())
                         x2 = int(xyxy[2].item())
                         y2 = int(xyxy[3].item())
-                        
+                        #data = arduino.readline()
                      
                         if (x1 <= 640/2 <= x2) and (y1 <= 480/2 <= y2) : # central object 일 경우 
 
@@ -271,33 +276,29 @@ def run(weights='best.pt',  # model.pt path(s)
                             
                             data = arduino.readline()
 
-                            if (data == b'2\r\n') or (result_csr == '{"text":"이거 뭐야"}'): # yolo 예측값 출력
-                               
-                               TTS_name = class_value.filter(class_name = object_name)[0]["TTS_name"]
+                            if (data == b'2\r\n') or (result_csr == '{"text":"이거 뭐야"}') or (result_csr == '{"text":"이게 뭐야"}'): # yolo 예측값 출력
+                               print(data)
+                               save_ob_name = object_name
+                               clova_voice.TTS_mp3(object_name) # clova_voice
 
                                cv2.imwrite(Path_for_web, im0)
                             
                                post = models.PredictedResult.objects.all()
                                img_path = 'repository/predicted/'+time_stamp2 + '.jpg'
                                post.create(user= now_user, type = 'YOLO', prediction = TTS_name, img_path = img_path)
-                              
-                               clova_voice.ClovaTTS(TTS_name) # clova_voice
                                ocr_name = []; result_csr = ''
 
                             if (data == b'5\r\n') or (result_csr == '{"text":"정보 알려줘"}'): # info 출력
-                                # yolo detected object에 대한 info 출력
-                                info = class_info.filter(name = TTS_name)[0]["information"]
-                                clova_voice.Clova_info(info) #clova_voice
-                                print(info)
-                                ocr_name = []; result_csr = ''
-
+                               print(data)
+                               clova_voice.Info_mp3(save_ob_name) #clova_voice
+                               ocr_name = []; result_csr = ''
+                               save_ob_name = ''
                             if (data == b'4\r\n') or (result_csr == '{"text":"이거 점자로 알려줘"}'): # 솔레노이드
                                print(data)
                                TTS_name = class_value.filter(class_name = object_name)[0]["TTS_name"]
                                print(TTS_name) # object name 출력
                                solenoid.HangeulSep(TTS_name) # 자모음 아두이노로 전송
                                ocr_name = []; result_csr = ''
-
 ############################################## end ##############################################################
                         
 

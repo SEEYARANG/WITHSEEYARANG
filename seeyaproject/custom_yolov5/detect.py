@@ -17,7 +17,7 @@ import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "seeyaproject.settings")
 django.setup()
 
-#///////////사진 저장 path///////////////////////////////////////////
+#################################### save image path ####################################
 FILE = Path(__file__).absolute()
 sys.path.append(FILE.parents[0].as_posix())  # add yolov5/ to path
 
@@ -25,17 +25,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 Path1 = os.path.join(BASE_DIR, 'repository')
 Path2 = os.path.join(Path1,'predicted_pictures')
 
-
 Path_for_web0 = os.path.join(BASE_DIR, 'foruser')
 Path_for_web1 = os.path.join(Path_for_web0, 'static')
 Path_for_web2 = os.path.join(Path_for_web1, 'repository')
 Path_for_web3 = os.path.join(Path_for_web2, 'predicted')
 
-
 '''from naver_clova import reset_folder
 reset_folder.reset_folder(Path2, '.jpg')'''
-
-#//////////////////////////////////////////////////////////////////
 
 from models.experimental import attempt_load
 from utils.datasets import LoadStreams, LoadImages
@@ -43,7 +39,8 @@ from utils.general import check_img_size, check_requirements, check_imshow, colo
     apply_classifier, scale_coords, xyxy2xywh, strip_optimizer, set_logging, increment_path, save_one_box
 from utils.plots import colors
 from utils.torch_utils import select_device, load_classifier, time_sync
-#//////////////////tts, ocr, csr//////////////////////////////////////////////////
+
+#################################### tts, ocr, csr ####################################
 from naver_clova import Gtts
 from naver_clova import clova_voice
 from naver_clova import clova_ocr
@@ -54,16 +51,32 @@ from naver_clova import solenoid
 class_value = models.TTSname.objects.values()
 class_info = models.Info.objects.values()
 
-#/////////////////// Arduino ///////////////////////////////////////////////////////
+#################################### GPIO ####################################
+import Jetson.GPIO as GPIO 
+import time
+
+but1 = 12
+but2 = 13
+but3 = 16
+but4 = 18
+but5 = 22
+
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(but1, GPIO.IN)   #버튼1, GPIO PIN 12                 
+GPIO.setup(but2, GPIO.IN)   #버튼2, GPIO PIN 13    
+GPIO.setup(but3, GPIO.IN)   #버튼3, GPIO PIN 16    
+GPIO.setup(but4, GPIO.IN)   #버튼4, GPIO PIN 18    
+GPIO.setup(but5, GPIO.IN)   #버튼5, GPIO PIN 22
+
+#################################### Arduino ####################################
 import serial
 import time
 
-# Arduino 0 = 스위치 + 초음파 거리 센서 + 진동 모듈
-port = '/dev/ttyACM0' # 시리얼 포트
-baud = 9600 # 시리얼 보드레이트(통신속도)
+port = '/dev/ttyACM0' # serial port
+baud = 9600 # serial boardrate
 arduino = serial.Serial(port,baud)
 
-#/////////////////////user///////////////////////////////////////////////////////////////
+#################################### user ####################################
 from user.get_user import user_name
 from user.models import User
 now_user = User.objects.get(id = user_name())
@@ -175,28 +188,26 @@ def run(weights='best.pt',  # model.pt path(s)
             else:
                 p, s, im0, frame = path, '', im0s.copy(), getattr(dataset, 'frame', 0)
 
-#////////////////////////////////////////////clova_csr//////////////////////////////////////////////////
-            result_csr = ''            
-            data = arduino.readline()
-            if data == b'1\r\n': # clova csr 
-                print(data)
+#################################### 1. clova_csr ####################################
+            result_csr = ''  
+            but1_value = GPIO.input(but1)          
+            if but1_value == 0: # clova csr 
+                print("but1 press")
                 print('start csr')
                 clova_csr.csr_init() # csr init 재생
                 clova_csr.get_audio() # audio file 생성
                 result_csr = clova_csr.audio_csr("CSR.wav") # Naver Clova CSR
                 print(result_csr)
-#/////////////////////////////////////////////////////////////////////////////////////////////////////////
             
-#////////////////////////////////////////////clova_ocr/////////////////////////////////////////////////
-
+#################################### 3. clova_ocr ####################################
             time_stamp2 = str(int(time.time()))
             Path3 = os.path.join(Path2, time_stamp2 + '.jpg')
             Path_for_web = os.path.join(Path_for_web3, time_stamp2 + '.jpg')
             cv2.imwrite(Path3, im0)
 
-            data = arduino.readline() 
-            if (data == b'3\r\n') or (result_csr == '{"text":"이거 읽어줘"}'): # 키오스크 ocr 출력
-                print(data)
+            but3_value = GPIO.input(but3)
+            if (but3_value == 0) or (result_csr == '{"text":"이거 읽어줘"}'): # 키오스크 ocr 출력
+                print("but3 press")
                 user_read, for_voice = clova_ocr.OcrResult(time_stamp2)
 
                 if user_read == []:
@@ -214,17 +225,17 @@ def run(weights='best.pt',  # model.pt path(s)
                     post.create(user= now_user, type = 'OCR', prediction = ocr_name, img_path = img_path)
                     result_csr = ''; save_ob_name = ''
         
-            data = arduino.readline()
-            if (data == b'5\r\n') or (result_csr == '{"text":"정보 알려줘"}'): # info 출력
-                print(data)
+#################################### 5. info ####################################
+            but5_value = GPIO.input(but5)
+            if (but5_value == 0) or (result_csr == '{"text":"정보 알려줘"}'): # info 출력
+                print("but5 press")
                 if len(ocr_name) != 0: # ocr에 대한 info 출력
                     for i in ocr_name:
                         info = class_info.filter(name = i)[0]["information"]
                         clova_voice.Clova_info(info)
                         print(info)
-                    ocr_name = []; result_csr = ''; save_ob_name = '';
-            
-#/////////////////////////////////////////////////////////////////////////////////////////////////////////
+                    ocr_name = []; result_csr = ''; save_ob_name = ''
+                    
 
             p = Path(p)  # to Path
             save_path = str(save_dir / p.name)  # img.jpg
@@ -268,37 +279,41 @@ def run(weights='best.pt',  # model.pt path(s)
                         y1 = int(xyxy[1].item())
                         x2 = int(xyxy[2].item())
                         y2 = int(xyxy[3].item())
-                        #data = arduino.readline()
                      
                         if (x1 <= 640/2 <= x2) and (y1 <= 480/2 <= y2) : # central object 일 경우 
 
                             print('detected object name = ', object_name)
-                            
-                            data = arduino.readline()
 
-                            if (data == b'2\r\n') or (result_csr == '{"text":"이거 뭐야"}') or (result_csr == '{"text":"이게 뭐야"}'): # yolo 예측값 출력
-                               print(data)
-                               save_ob_name = object_name
-                               clova_voice.TTS_mp3(object_name) # clova_voice
+#################################### 2. object name ####################################
+                            but2_value = GPIO.input(but2)
+                            if (but2_value == 0) or (result_csr == '{"text":"이거 뭐야"}') or (result_csr == '{"text":"이게 뭐야"}'): # yolo 예측값 출력
+                                print("but2 press")
+                                save_ob_name = object_name
+                                clova_voice.TTS_mp3(object_name) # clova_voice
+                                cv2.imwrite(Path_for_web, im0)
+                                TTS_name = class_value.filter(class_name = object_name)[0]["TTS_name"]
+                                print(TTS_name)
+                                post = models.PredictedResult.objects.all()
+                                img_path = 'repository/predicted/'+time_stamp2 + '.jpg'
+                                post.create(user= now_user, type = 'YOLO', prediction = TTS_name, img_path = img_path)
+                                ocr_name = []; result_csr = ''
 
-                               cv2.imwrite(Path_for_web, im0)
-                            
-                               post = models.PredictedResult.objects.all()
-                               img_path = 'repository/predicted/'+time_stamp2 + '.jpg'
-                               post.create(user= now_user, type = 'YOLO', prediction = TTS_name, img_path = img_path)
-                               ocr_name = []; result_csr = ''
+#################################### 5. info ####################################
+                            if (but5_value == 0) or (result_csr == '{"text":"정보 알려줘"}'): # info 출력
+                                print("but5 press")
+                                clova_voice.Info_mp3(save_ob_name) #clova_voice
+                                ocr_name = []; result_csr = ''
+                                save_ob_name = ''
 
-                            if (data == b'5\r\n') or (result_csr == '{"text":"정보 알려줘"}'): # info 출력
-                               print(data)
-                               clova_voice.Info_mp3(save_ob_name) #clova_voice
-                               ocr_name = []; result_csr = ''
-                               save_ob_name = ''
-                            if (data == b'4\r\n') or (result_csr == '{"text":"이거 점자로 알려줘"}'): # 솔레노이드
-                               print(data)
-                               TTS_name = class_value.filter(class_name = object_name)[0]["TTS_name"]
-                               print(TTS_name) # object name 출력
-                               solenoid.HangeulSep(TTS_name) # 자모음 아두이노로 전송
-                               ocr_name = []; result_csr = ''
+#################################### 4. solenoid ####################################
+                            but4_value = GPIO.input(but4)
+                            if (but4_value == 0) or (result_csr == '{"text":"이거 점자로 알려줘"}'): # 솔레노이드
+                                print("but4 press")
+                                TTS_name = class_value.filter(class_name = object_name)[0]["TTS_name"]
+                                print(TTS_name) # object name 출력
+                                solenoid.HangeulSep(TTS_name) # 자모음 아두이노로 전송
+                                ocr_name = []; result_csr = ''
+
 ############################################## end ##############################################################
                         
 

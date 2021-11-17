@@ -5,11 +5,6 @@ sys.path.append(os.path.dirname(os.path.abspath(os.path.dirname(__file__))))
 
 from yolov5 import detect
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-ImgPath1 = os.path.join(BASE_DIR, 'repository')
-ImgPath2 = os.path.join(ImgPath1, 'predicted_pictures')
-Img_list = glob(ImgPath2 + '/*')
-
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "seeyaproject.settings")
 

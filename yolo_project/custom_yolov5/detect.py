@@ -24,17 +24,24 @@ sys.path.append(FILE.parents[0].as_posix())  # add yolov5/ to path
 BASE_DIR = Path(__file__).resolve().parent.parent
 Path1 = os.path.join(BASE_DIR, 'repository')
 Path2 = os.path.join(Path1,'predicted_pictures')
-Path_data = os.path.join(Path1,'save_dataset')
 
-from naver_clova import reset_folder
-reset_folder.reset_folder(Path2, '.jpg')
+
+Path_for_web0 = os.path.join(BASE_DIR, 'foruser')
+Path_for_web1 = os.path.join(Path_for_web0, 'static')
+Path_for_web2 = os.path.join(Path_for_web1, 'repository')
+Path_for_web3 = os.path.join(Path_for_web2, 'predicted')
+
+
+'''from naver_clova import reset_folder
+reset_folder.reset_folder(Path2, '.jpg')'''
+
 #//////////////////////////////////////////////////////////////////
 
 from models.experimental import attempt_load
 from utils.datasets import LoadStreams, LoadImages
 from utils.general import check_img_size, check_requirements, check_imshow, colorstr, non_max_suppression, \
     apply_classifier, scale_coords, xyxy2xywh, strip_optimizer, set_logging, increment_path, save_one_box
-from utils.plots import colors, plot_one_box
+from utils.plots import colors
 from utils.torch_utils import select_device, load_classifier, time_sync
 #//////////////////tts, ocr, csr//////////////////////////////////////////////////
 from naver_clova import Gtts
@@ -56,11 +63,13 @@ port = '/dev/ttyACM0' # 시리얼 포트
 baud = 9600 # 시리얼 보드레이트(통신속도)
 arduino = serial.Serial(port,baud)
 
-#/////////////////////////////////////////////////////////////////////////////////////////
-
+#/////////////////////user///////////////////////////////////////////////////////////////
+from user.get_user import user_name
+from user.models import User
+now_user = User.objects.get(id = user_name())
 
 @torch.no_grad()
-def run(weights='seeya.pt',  # model.pt path(s)
+def run(weights='best.pt',  # model.pt path(s)
         source='',  # file/dir/URL/glob, 0 for webcam
         imgsz=416,  # inference size (pixels)
         conf_thres=0.25,  # confidence threshold
@@ -88,8 +97,7 @@ def run(weights='seeya.pt',  # model.pt path(s)
     save_img = not nosave and not source.endswith('.txt')  # save inference images
     webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
         ('rtsp://', 'rtmp://', 'http://', 'https://'))
-    results = {} 
-    results['predict'] = 'None'
+    
 
     # Directories
     save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)  # increment run
@@ -179,27 +187,35 @@ def run(weights='seeya.pt',  # model.pt path(s)
                 print(result_csr)
 #/////////////////////////////////////////////////////////////////////////////////////////////////////////
             
-#////////////////////////////////////////////clova_ocr//////////////////////////////////////////////////
-            time_stamp1 = str(int(time.time()))
-            Path_data2 = os.path.join(Path_data, time_stamp1 + '.jpg')
-            cv2.imwrite(Path_data2, im0)
+#////////////////////////////////////////////clova_ocr/////////////////////////////////////////////////
+
             time_stamp2 = str(int(time.time()))
             Path3 = os.path.join(Path2, time_stamp2 + '.jpg')
+            Path_for_web = os.path.join(Path_for_web3, time_stamp2 + '.jpg')
             cv2.imwrite(Path3, im0)
 
             data = arduino.readline() 
-            if (data == b'3\r\n') or (result_csr == '{"text":"이거 읽어줘"}')or (result_csr == '{"text":"읽어 읽어줘"}'): # 키오스크 ocr 출력
-                ocr_name, user_read = clova_ocr.OcrResult(time_stamp2)
+            if (data == b'3\r\n') or (result_csr == '{"text":"이거 읽어줘"}'): # 키오스크 ocr 출력
+                user_read, for_voice = clova_ocr.OcrResult(time_stamp2)
+                print(data)
                 if user_read == []:
-                    clova_voice.Clova_info("키오스크가 감지되지 않았습니다")
+                    clova_voice.Clova_info("텍스트가 감지되지 않았습니다")
                     ocr_name = []
                     result_csr = ''
                 else:
                     clova_voice.Clova_ocrread(user_read) #clova_voice
+                    ocr_name = for_voice
+                               
+                    cv2.imwrite(Path_for_web, im0)
+                            
+                    post = models.PredictedResult.objects.all()
+                    img_path = 'repository/predicted/' + time_stamp2 + '.jpg'
+                    post.create(user= now_user, type = 'OCR', prediction = ocr_name, img_path = img_path)
                     result_csr = ''
-            
+        
+
             if (data == b'5\r\n') or (result_csr == '{"text":"정보 알려줘"}'): # info 출력
-                print(ocr_name)
+                print(data)
                 if len(ocr_name) != 0: # ocr에 대한 info 출력
                     for i in ocr_name:
                         info = class_info.filter(name = i)[0]["information"]
@@ -225,7 +241,7 @@ def run(weights='seeya.pt',  # model.pt path(s)
                     n = (det[:, -1] == c).sum()  # detections per class
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "  # add to string
                 
-                results['predict'] = s
+
 
                 # Write results
                 for *xyxy, conf, cls in reversed(det):
@@ -238,7 +254,7 @@ def run(weights='seeya.pt',  # model.pt path(s)
                     if save_img or save_crop or view_img:  # Add bbox to image
                         c = int(cls)  # integer class
                         label = None if hide_labels else (names[c] if hide_conf else f'{names[c]} {conf:.2f}')
-                        plot_one_box(xyxy, im0, label=label, color=colors(c, True))#, line_thickness=line_thickness)
+                        #plot_one_box(xyxy, im0, label=label, color=colors(c, True))#, line_thickness=line_thickness)
 
 #################################### add code ###########################################################################
                         
@@ -249,33 +265,22 @@ def run(weights='seeya.pt',  # model.pt path(s)
                         y1 = int(xyxy[1].item())
                         x2 = int(xyxy[2].item())
                         y2 = int(xyxy[3].item())
-
                         
-
+                     
                         if (x1 <= 640/2 <= x2) and (y1 <= 480/2 <= y2) : # central object 일 경우 
 
                             print('detected object name = ', object_name)
-                            results['predict'] = object_name
-
-                            #//////////////db 저장////////////////////////////////////
-                            post = models.PredictedResult.objects.all()
-                            post.create(type = 'YOLO', prediction = results['predict'])
-                            #////////////////////////////////////////////////////////////////////
                             
                             data = arduino.readline()
 
                             if (data == b'2\r\n') or (result_csr == '{"text":"이거 뭐야"}'): # yolo 예측값 출력
-                               print(data) 
-                               TTS_name = class_value.filter(class_name = object_name)[0]["TTS_name"]
-                               print(TTS_name)
-                               clova_voice.ClovaTTS(TTS_name) # clova_voice
+                               print(data)
+                               clova_voice.TTS_mp3(object_name) # clova_voice
                                ocr_name = []; result_csr = ''
 
                             if (data == b'5\r\n') or (result_csr == '{"text":"정보 알려줘"}'): # info 출력
-                               # yolo detected object에 대한 info 출력
-                               info = class_info.filter(name = TTS_name)[0]["information"]
-                               clova_voice.Clova_info(info) #clova_voice
-                               print(info)
+                               print(data)
+                               clova_voice.Info_mp3(object_name) #clova_voice
                                ocr_name = []; result_csr = ''
 
                             if (data == b'4\r\n') or (result_csr == '{"text":"이거 점자로 알려줘"}'): # 솔레노이드
@@ -286,8 +291,7 @@ def run(weights='seeya.pt',  # model.pt path(s)
                                ocr_name = []; result_csr = ''
 
 ############################################## end ##############################################################
-                        if save_crop:
-                            save_one_box(xyxy, imc, file=save_dir / 'crops' / names[c] / f'{p.stem}.jpg', BGR=True)
+                        
 
             # Print time (inference + NMS)
             print(f'{s}Done. ({t2 - t1:.3f}s)')
@@ -298,15 +302,7 @@ def run(weights='seeya.pt',  # model.pt path(s)
                 if cv2.waitKey(1) == ord('q'):  # q to quit, 0.001초만큼 키보드 입력 기다림
                         raise StopIteration
 
-           
-
-    if save_txt or save_img:
-        s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
-        print(f"Results saved to {save_dir}{s}")
-        results['save_dir']=f"{save_dir}{s}"
-
     if update:
         strip_optimizer(weights)  # update model (to fix SourceChangeWarning)
 
     print(f'Done. ({time.time() - t0:.3f}s)')
-    return results

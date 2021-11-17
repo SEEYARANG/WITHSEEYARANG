@@ -10,6 +10,7 @@ __pycache__/
 local_settings.py
 db.sqlite3
 db.sqlite3-journal
+secrets.json
 media
 
 # If your build process includes running collectstatic, then you probably don't need or want to include staticfiles/
@@ -38,7 +39,9 @@ parts/
 sdist/
 var/
 wheels/
+repository/
 share/python-wheels/
+yolo_project/naver_clova/csr_init.mp3
 *.egg-info/
 .installed.cfg
 *.egg

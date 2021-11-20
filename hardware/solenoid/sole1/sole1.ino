@@ -62,6 +62,9 @@ void loop() {
         char c;
         c = BTSerial.read();
         Serial.write(c);
+        if (c == 'z') {
+          func0();
+        }
         if (c == 'A') {
           func1();
         }

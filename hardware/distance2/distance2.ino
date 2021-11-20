@@ -5,12 +5,6 @@ SoftwareSerial btSerial(2, 3);  // 블루투스를 사용하기 위해 BT 이름
 SoftwareSerial bt2Serial(5, 4);  // 블루투스를 사용하기 위해 BT 이름으로 선언
 SoftwareSerial bt3Serial(6, 7);
 
-// 스위치 1~5
-#define BTN_PIN1 A0
-#define BTN_PIN2 A1
-#define BTN_PIN3 A2
-#define BTN_PIN4 A3
-#define BTN_PIN5 A4
 
 // 연결핀 변수 설정
 int VibPin = 11; // 진동 모터
@@ -28,49 +22,10 @@ void setup(){
   pinMode(VibPin, OUTPUT); // 진동 모터
   pinMode(echoPin, INPUT); // 초음파 거리 센서 echoPin 입력    
   pinMode(trigPin, OUTPUT); // 초음파 거리 센서 trigPin 출력
-  pinMode(BTN_PIN1, INPUT_PULLUP); // 버튼핀 
-  pinMode(BTN_PIN2, INPUT_PULLUP);
-  pinMode(BTN_PIN3, INPUT_PULLUP);
-  pinMode(BTN_PIN4, INPUT_PULLUP);
-  pinMode(BTN_PIN5, INPUT_PULLUP);
 }
  
 void loop(){
   
-  // object name
-  Serial.println('-1');
-  if (digitalRead(BTN_PIN1) == LOW)
-  {
-    Serial.println('1');
-    delay(1000);
-  }
-
-  // ocr
-  if (digitalRead(BTN_PIN2) == LOW)
-  {
-    Serial.println('2');
-    delay(1000);
-  }
-
-  // info
-  if (digitalRead(BTN_PIN3) == LOW)
-  {
-    Serial.println('3');
-    delay(1000);
-  }
-
-  // 솔레노이드
-  if (digitalRead(BTN_PIN4) == LOW) {
-    Serial.println("4");
-    delay(1000);
-  }
-
-  // csr
-  if (digitalRead(BTN_PIN5) == LOW)
-  {
-    Serial.println('5');
-    delay(1000);
-  }
 
   // 초음파 거리 센서 + 진동 모듈
   long duration, distance;
@@ -84,11 +39,6 @@ void loop(){
 
   duration = pulseIn(echoPin, HIGH); // echoPin 이 HIGH를 유지한 시간을 저장
   distance = (((float)(340 * duration) / 1000) / 2) / 10; // 거리 계산
-
-  //Serial.print("Duration: "); //시리얼모니터에 Echo가 HIGH인 시간을 표시
-  //Serial.print(duration);
-  //Serial.print("Distance(cm): "); // 물체와 초음파 센서간 거리를 표시        
-  //Serial.println(distance);
   delay(100);
 
   if (distance <= 40) // 특정 거리 내 진입
@@ -106,6 +56,11 @@ void loop(){
    
   int c = Serial.read();
   //Serial.println(c);
+  if (c == 0){
+    btSerial.write('z');
+    bt2Serial.write('z');
+    bt3Serial.write('z');
+  }
   if (c ==1){
     btSerial.write('A');
     bt2Serial.write('A');

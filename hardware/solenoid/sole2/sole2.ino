@@ -285,19 +285,19 @@ void func3() {
 void func4() {
   digitalWrite(Relaypin1, HIGH);   //Turn off relay
   digitalWrite(Relaypin2, HIGH);   //Turn off relay
-  digitalWrite(Relaypin3, LOW);   //Turn off relay
+  digitalWrite(Relaypin3, HIGH);   //Turn off relay
   digitalWrite(Relaypin4, HIGH);   //Turn off relay
   digitalWrite(Relaypin5, HIGH);   //Turn off relay
-  digitalWrite(Relaypin6, HIGH);   //Turn off relay
+  digitalWrite(Relaypin6, LOW);   //Turn off relay
   digitalWrite(Relaypin7, HIGH);   //Turn off relay
-  digitalWrite(Relaypin8, LOW);   //Turn off relay
-  digitalWrite(Relaypin9, LOW);   //Turn off relay
+  digitalWrite(Relaypin8, HIGH);   //Turn off relay
+  digitalWrite(Relaypin9, HIGH);   //Turn off relay
   digitalWrite(Relaypin10, HIGH);   //Turn off relay
   digitalWrite(Relaypin11, LOW);   //Turn off relay
-  digitalWrite(Relaypin12, HIGH);   //Turn off relay
+  digitalWrite(Relaypin12, LOW);   //Turn off relay
   digitalWrite(Relaypin13, HIGH);   //Turn off relay
   digitalWrite(Relaypin14, LOW);   //Turn off relay
-  digitalWrite(Relaypin15, LOW);   //Turn off relay
+  digitalWrite(Relaypin15, HIGH);   //Turn off relay
   digitalWrite(Relaypin16, HIGH);   //Turn off relay
   delay(4000);
   func0();
@@ -658,11 +658,11 @@ void func20() {
   digitalWrite(Relaypin5, HIGH);   //Turn off relay
   digitalWrite(Relaypin6, HIGH);   //Turn off relay
   digitalWrite(Relaypin7, HIGH);   //Turn off relay
-  digitalWrite(Relaypin8, LOW);   //Turn off relay
-  digitalWrite(Relaypin9, LOW);   //Turn off relay
+  digitalWrite(Relaypin8, HIGH);   //Turn off relay
+  digitalWrite(Relaypin9, HIGH);   //Turn off relay
   digitalWrite(Relaypin10, HIGH);   //Turn off relay
-  digitalWrite(Relaypin11, HIGH);   //Turn off relay
-  digitalWrite(Relaypin12, HIGH);   //Turn off relay
+  digitalWrite(Relaypin11, LOW);   //Turn off relay
+  digitalWrite(Relaypin12, LOW);   //Turn off relay
   digitalWrite(Relaypin13, HIGH);   //Turn off relay
   digitalWrite(Relaypin14, HIGH);   //Turn off relay
   digitalWrite(Relaypin15, HIGH);   //Turn off relay
@@ -678,17 +678,17 @@ void func21() {
   digitalWrite(Relaypin2, HIGH);   //Turn off relay
   digitalWrite(Relaypin3, HIGH);   //Turn off relay
   digitalWrite(Relaypin4, HIGH);   //Turn off relay
-  digitalWrite(Relaypin5, LOW);   //Turn off relay
-  digitalWrite(Relaypin6, LOW);   //Turn off relay
+  digitalWrite(Relaypin5, HIGH);   //Turn off relay
+  digitalWrite(Relaypin6, HIGH);   //Turn off relay
   digitalWrite(Relaypin7, HIGH);   //Turn off relay
-  digitalWrite(Relaypin8, HIGH);   //Turn off relay
-  digitalWrite(Relaypin9, HIGH);   //Turn off relay
+  digitalWrite(Relaypin8, LOW);   //Turn off relay
+  digitalWrite(Relaypin9, LOW);   //Turn off relay
   digitalWrite(Relaypin10, HIGH);   //Turn off relay
-  digitalWrite(Relaypin11, LOW);   //Turn off relay
-  digitalWrite(Relaypin12, LOW);   //Turn off relay
+  digitalWrite(Relaypin11, HIGH);   //Turn off relay
+  digitalWrite(Relaypin12, HIGH);   //Turn off relay
   digitalWrite(Relaypin13, HIGH);   //Turn off relay
-  digitalWrite(Relaypin14, HIGH);   //Turn off relay
-  digitalWrite(Relaypin15, HIGH);   //Turn off relay
+  digitalWrite(Relaypin14, LOW);   //Turn off relay
+  digitalWrite(Relaypin15, LOW);   //Turn off relay
   digitalWrite(Relaypin16, HIGH);   //Turn off relay
   delay(4000);
   func0();
@@ -699,7 +699,7 @@ void func21() {
 void func22() {
   digitalWrite(Relaypin1, HIGH);   //Turn off relay
   digitalWrite(Relaypin2, HIGH);   //Turn off relay
-  digitalWrite(Relaypin3, LOW);   //Turn off relay
+  digitalWrite(Relaypin3, HIGH);   //Turn off relay
   digitalWrite(Relaypin4, HIGH);   //Turn off relay
   digitalWrite(Relaypin5, HIGH);   //Turn off relay
   digitalWrite(Relaypin6, LOW);   //Turn off relay
@@ -722,7 +722,7 @@ void func22() {
 void func23() {
   digitalWrite(Relaypin1, HIGH);   //Turn off relay
   digitalWrite(Relaypin2, HIGH);   //Turn off relay
-  digitalWrite(Relaypin3, LOW);   //Turn off relay
+  digitalWrite(Relaypin3, HIGH);   //Turn off relay
   digitalWrite(Relaypin4, HIGH);   //Turn off relay
   digitalWrite(Relaypin5, HIGH);   //Turn off relay
   digitalWrite(Relaypin6, LOW);   //Turn off relay
@@ -860,7 +860,7 @@ void func28() {
 void func29() {
   digitalWrite(Relaypin1, HIGH);   //Turn off relay
   digitalWrite(Relaypin2, HIGH);   //Turn off relay
-  digitalWrite(Relaypin3, LOW);   //Turn off relay
+  digitalWrite(Relaypin3, HIGH);   //Turn off relay
   digitalWrite(Relaypin4, HIGH);   //Turn off relay
   digitalWrite(Relaypin5, HIGH);   //Turn off relay
   digitalWrite(Relaypin6, LOW);   //Turn off relay
@@ -931,17 +931,17 @@ void func32() {
   digitalWrite(Relaypin2, HIGH);   //Turn off relay
   digitalWrite(Relaypin3, HIGH);   //Turn off relay
   digitalWrite(Relaypin4, HIGH);   //Turn off relay
-  digitalWrite(Relaypin5, HIGH);   //Turn off relay
-  digitalWrite(Relaypin6, LOW);   //Turn off relay
+  digitalWrite(Relaypin5, LOW);   //Turn off relay
+  digitalWrite(Relaypin6, HIGH);   //Turn off relay
   digitalWrite(Relaypin7, HIGH);   //Turn off relay
-  digitalWrite(Relaypin8, HIGH);   //Turn off relay
-  digitalWrite(Relaypin9, LOW);   //Turn off relay
+  digitalWrite(Relaypin8, LOW);   //Turn off relay
+  digitalWrite(Relaypin9, HIGH);   //Turn off relay
   digitalWrite(Relaypin10, HIGH);   //Turn off relay
-  digitalWrite(Relaypin11, HIGH);   //Turn off relay
-  digitalWrite(Relaypin12, LOW);   //Turn off relay
+  digitalWrite(Relaypin11, LOW);   //Turn off relay
+  digitalWrite(Relaypin12, HIGH);   //Turn off relay
   digitalWrite(Relaypin13, HIGH);   //Turn off relay
-  digitalWrite(Relaypin14, HIGH);   //Turn off relay
-  digitalWrite(Relaypin15, LOW);   //Turn off relay
+  digitalWrite(Relaypin14, LOW);   //Turn off relay
+  digitalWrite(Relaypin15, HIGH);   //Turn off relay
   digitalWrite(Relaypin16, HIGH);   //Turn off relay
   delay(4000);
   func0();
@@ -954,17 +954,17 @@ void func33() {
   digitalWrite(Relaypin2, HIGH);   //Turn off relay
   digitalWrite(Relaypin3, HIGH);   //Turn off relay
   digitalWrite(Relaypin4, HIGH);   //Turn off relay
-  digitalWrite(Relaypin5, HIGH);   //Turn off relay
-  digitalWrite(Relaypin6, LOW);   //Turn off relay
+  digitalWrite(Relaypin5, LOW);   //Turn off relay
+  digitalWrite(Relaypin6, HIGH);   //Turn off relay
   digitalWrite(Relaypin7, HIGH);   //Turn off relay
-  digitalWrite(Relaypin8, HIGH);   //Turn off relay
-  digitalWrite(Relaypin9, LOW);   //Turn off relay
+  digitalWrite(Relaypin8, LOW);   //Turn off relay
+  digitalWrite(Relaypin9, HIGH);   //Turn off relay
   digitalWrite(Relaypin10, HIGH);   //Turn off relay
-  digitalWrite(Relaypin11, HIGH);   //Turn off relay
-  digitalWrite(Relaypin12, LOW);   //Turn off relay
+  digitalWrite(Relaypin11, LOW);   //Turn off relay
+  digitalWrite(Relaypin12, HIGH);   //Turn off relay
   digitalWrite(Relaypin13, HIGH);   //Turn off relay
-  digitalWrite(Relaypin14, HIGH);   //Turn off relay
-  digitalWrite(Relaypin15, LOW);   //Turn off relay
+  digitalWrite(Relaypin14, LOW);   //Turn off relay
+  digitalWrite(Relaypin15, HIGH);   //Turn off relay
   digitalWrite(Relaypin16, HIGH);   //Turn off relay
   delay(4000);
   func0();
@@ -1115,17 +1115,17 @@ void func40() {
   digitalWrite(Relaypin2, HIGH);   //Turn off relay
   digitalWrite(Relaypin3, HIGH);   //Turn off relay
   digitalWrite(Relaypin4, HIGH);   //Turn off relay
-  digitalWrite(Relaypin5, HIGH);   //Turn off relay
-  digitalWrite(Relaypin6, LOW);   //Turn off relay
+  digitalWrite(Relaypin5, LOW);   //Turn off relay
+  digitalWrite(Relaypin6, HIGH);   //Turn off relay
   digitalWrite(Relaypin7, HIGH);   //Turn off relay
-  digitalWrite(Relaypin8, HIGH);   //Turn off relay
-  digitalWrite(Relaypin9, LOW);   //Turn off relay
+  digitalWrite(Relaypin8, LOW);   //Turn off relay
+  digitalWrite(Relaypin9, HIGH);   //Turn off relay
   digitalWrite(Relaypin10, HIGH);   //Turn off relay
-  digitalWrite(Relaypin11, HIGH);   //Turn off relay
-  digitalWrite(Relaypin12, LOW);   //Turn off relay
+  digitalWrite(Relaypin11, LOW);   //Turn off relay
+  digitalWrite(Relaypin12, HIGH);   //Turn off relay
   digitalWrite(Relaypin13, HIGH);   //Turn off relay
-  digitalWrite(Relaypin14, HIGH);   //Turn off relay
-  digitalWrite(Relaypin15, LOW);   //Turn off relay
+  digitalWrite(Relaypin14, LOW);   //Turn off relay
+  digitalWrite(Relaypin15, HIGH);   //Turn off relay
   digitalWrite(Relaypin16, HIGH);   //Turn off relay
   delay(4000);
   func0();

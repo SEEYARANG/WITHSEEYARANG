@@ -10,22 +10,11 @@
 
 SoftwareSerial BTSerial(2, 3);
 
-int Relaypin1 = 4;
-int Relaypin2 = 5;
-int Relaypin3 = 6;
-int Relaypin4 = 7;
-int Relaypin5 = 8;
-int Relaypin6 = 9;
-int Relaypin7 = 10;
-int Relaypin8 = 11;
-int Relaypin9 = 12; 
-int Relaypin10 = 13; 
-int Relaypin11 = A0; 
-int Relaypin12 = A1;
-int Relaypin13 = A2;  
-int Relaypin14 = A3;  
-int Relaypin15 = A4;  
-int Relaypin16 = A5;  
+int Relaypin1 = 12;
+int Relaypin2 = 13;
+int Relaypin3 = A4;
+int Relaypin4 = A5;
+
 
 
 
@@ -36,18 +25,7 @@ void setup()
   pinMode(Relaypin2,OUTPUT);         // 릴레이 제어 2번핀을 출력으로 설정
   pinMode(Relaypin3,OUTPUT);         // 릴레이 제어 3번핀을 출력으로 설정
   pinMode(Relaypin4,OUTPUT);         // 릴레이 제어 4번핀을 출력으로 설정
-  pinMode(Relaypin5,OUTPUT);         // 릴레이 제어 5번핀을 출력으로 설정
-  pinMode(Relaypin6,OUTPUT);         // 릴레이 제어 6번핀을 출력으로 설정
-  pinMode(Relaypin7,OUTPUT);         // 릴레이 제어 7번핀을 출력으로 설정
-  pinMode(Relaypin8,OUTPUT);         // 릴레이 제어 8번핀을 출력으로 설정
-  pinMode(Relaypin9,OUTPUT);         // 릴레이 제어 8번핀을 출력으로 설정
-  pinMode(Relaypin10,OUTPUT);         // 릴레이 제어 8번핀을 출력으로 설정
-  pinMode(Relaypin11,OUTPUT);         // 릴레이 제어 8번핀을 출력으로 설정
-  pinMode(Relaypin12,OUTPUT);         // 릴레이 제어 8번핀을 출력으로 설정
-  pinMode(Relaypin13,OUTPUT);         // 릴레이 제어 8번핀을 출력으로 설정
-  pinMode(Relaypin14,OUTPUT);
-  pinMode(Relaypin15,OUTPUT);
-  pinMode(Relaypin16,OUTPUT);
+
   BTSerial.begin(9600);
   func0();
 }
@@ -236,9 +214,9 @@ void func3() {
 //ㄹ
 void func4() {
   digitalWrite(Relaypin1, HIGH);   //Turn off relay
-  digitalWrite(Relaypin2, LOW);   //Turn off relay
-  digitalWrite(Relaypin3, HIGH);   //Turn off relay
-  digitalWrite(Relaypin4, HIGH);   //Turn off relay
+  digitalWrite(Relaypin2, HIGH);   //Turn off relay
+  digitalWrite(Relaypin3, LOW);   //Turn off relay
+  digitalWrite(Relaypin4, LOW);   //Turn off relay
   delay(4000);
   func0();
   return;
@@ -324,7 +302,7 @@ void func11() {
 //ㅌ
 void func12() {
   digitalWrite(Relaypin1, HIGH);   //Turn off relay
-  digitalWrite(Relaypin2, LOW);   //Turn off relay
+  digitalWrite(Relaypin2, HIGH);   //Turn off relay
   digitalWrite(Relaypin3, HIGH);   //Turn off relay
   digitalWrite(Relaypin4, HIGH);   //Turn off relay
   delay(4000);
@@ -412,7 +390,7 @@ void func19() {
 //ㅏ
 void func20() {
   digitalWrite(Relaypin1, HIGH);   //Turn off relay
-  digitalWrite(Relaypin2, LOW);   //Turn off relay
+  digitalWrite(Relaypin2, HIGH);   //Turn off relay
   digitalWrite(Relaypin3, HIGH);   //Turn off relay
   digitalWrite(Relaypin4, HIGH);   //Turn off relay
   delay(4000);
@@ -423,7 +401,7 @@ void func20() {
 //ㅑ
 void func21() {
   digitalWrite(Relaypin1, HIGH);   //Turn off relay
-  digitalWrite(Relaypin2, LOW);   //Turn off relay
+  digitalWrite(Relaypin2, HIGH);   //Turn off relay
   digitalWrite(Relaypin3, HIGH);   //Turn off relay
   digitalWrite(Relaypin4, HIGH);   //Turn off relay
   delay(4000);
@@ -436,7 +414,7 @@ void func22() {
   digitalWrite(Relaypin1, HIGH);   //Turn off relay
   digitalWrite(Relaypin2, HIGH);   //Turn off relay
   digitalWrite(Relaypin3, HIGH);   //Turn off relay
-  digitalWrite(Relaypin4, HIGH);   //Turn off relay
+  digitalWrite(Relaypin4, LOW);   //Turn off relay
   delay(4000);
   func0();
   return;
@@ -447,7 +425,7 @@ void func23() {
   digitalWrite(Relaypin1, HIGH);   //Turn off relay
   digitalWrite(Relaypin2, HIGH);   //Turn off relay
   digitalWrite(Relaypin3, HIGH);   //Turn off relay
-  digitalWrite(Relaypin4, HIGH);   //Turn off relay
+  digitalWrite(Relaypin4, LOW);   //Turn off relay
   delay(4000);
   func0();
   return;
@@ -513,7 +491,7 @@ void func29() {
   digitalWrite(Relaypin1, HIGH);   //Turn off relay
   digitalWrite(Relaypin2, HIGH);   //Turn off relay
   digitalWrite(Relaypin3, HIGH);   //Turn off relay
-  digitalWrite(Relaypin4, HIGH);   //Turn off relay
+  digitalWrite(Relaypin4, LOW);   //Turn off relay
   delay(4000);
   func0();
   return;
@@ -599,7 +577,7 @@ void func36() {
 //ㅒ
 void func37() {
   digitalWrite(Relaypin1, HIGH);   //Turn off relay
-  digitalWrite(Relaypin2, LOW);   //Turn off relay
+  digitalWrite(Relaypin2, HIGH);   //Turn off relay
   digitalWrite(Relaypin3, HIGH);   //Turn off relay
   digitalWrite(Relaypin4, HIGH);   //Turn off relay
   delay(4000);

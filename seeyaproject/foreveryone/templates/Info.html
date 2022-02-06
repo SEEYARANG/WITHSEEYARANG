@@ -1,0 +1,82 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <!-- Webpage Title -->
+    <title>정보추가</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+          crossorigin="anonymous">
+
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+
+    <!-- 구글폰트 -->
+    <link href="https://fonts.googleapis.com/css?family=Do+Hyeon&display=swap" rel="stylesheet">
+    
+    <style type="text/css">
+        *{
+            font-family: "Do Hyeon", sans-serif;
+        } 
+        
+    </style>
+
+    <link rel="stylesheet" type = "text/css" href="{% static 'css/info.css'%}">
+    <script src = "{%static 'js/csrftoken.js' %}" type = "text/javascript"></script> 
+    <script>
+        $(document).ready(function () {
+            show();
+        });
+
+        function show() {
+            $.ajax({
+                type: 'GET',
+                url: '{%url "info_ajax"%}',
+                data: {},
+                success: function(response){
+                    let itemlist = response['items']
+                    for(let i=0; i<itemlist.length; i++){
+                        let name = itemlist[i]['name']
+                        let img = itemlist[i]['image_path']
+                        let num = itemlist[i]['id']
+                        let temp_html1 = `<div class="card card_box">
+                                            <img src="{% get_static_prefix %}${img}" class="card-img-top img_box " width =80px,height = 80px alt="">
+                                            <div class="card-body">
+                                                <h5 class="card-title">< ${name} ></h5>
+                                                <p class="card-text">이 상품에 대한 정보를 알려주세요 </p>
+                                                <a href="/seeyarang/info/${num}" class = "button">후기 쓰러가기</a>
+                                            </div>
+                                        </div>`
+                        $('#item-box').append(temp_html1)
+                        
+                    }
+                }
+            })
+        }
+    </script>
+</head>
+<body>
+    <div class="wrap">
+        <div class="logout">
+            <h3 ><a href="/seeyarang"><p class="small logoutcolor">HOME</p></a></h3>
+        </div>
+        <div class="jumbotron">
+            <h1 class="display-4">시야랑 후기</h1>
+            <br>
+            <p class="lead">맛, 칼로리, 특징 등 상품의 후기를 들려주세요!</p>
+            <hr class="my-4">
+        </div>
+        <div id="item-box" class="card-columns">
+        </div>
+    </div>
+</body>
